@@ -7,7 +7,9 @@
 \usepackage{multicol}
 % \modulolinenumbers[5]
 
-\journal{Journal of \LaTeX\ Templates}
+%\journal{Journal of \LaTeX\ Templates}
+
+\journal{INDIS 2017}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 %% Elsevier bibliography styles
@@ -45,7 +47,7 @@
 
 \begin{frontmatter}
 
-\title{Anomaly detection in wide area network meshes using two machine learning anomaly detection algorithms}
+\title{Anomaly Detection in Wide Area Network Meshes Using Two Machine Learning Algorithms}
 
 %% Group authors per affiliation:
 \author{James Zhang}
@@ -58,7 +60,7 @@
 
 
 \begin{abstract}
-Anomaly detection is the practice of identifying items or events that do not conform to an expected behavior or do not correlate with other items in a dataset. It has previously been applied to areas such as intrusion detection, system health monitoring, and fraud detection in credit card transactions. In this paper, we describe a new method for detecting anomalous behavior over network performance data, gathered by perfSONAR, using two machine learning algorithms: Boosted Decision Trees (BDT) and Simple Feedforward Neural Network. The effectiveness of each algorithm was evaluated and compared. Both have shown sufficient performance and sensitivity.
+Anomaly detection is the practice of identifying items or events that do not conform to an expected behavior or do not correlate with other items in a dataset. It has previously been applied to areas such as intrusion detection, system health monitoring, and fraud detection in credit card transactions. In this paper, we describe a new method for detecting anomalous behavior in network performance data, gathered by the Open Science Grid using perfSONAR servers.  Two machine learning algorithms were studied: a Boosted Decision Tree (BDT) and a simple feedforward neural network. The effectiveness of each algorithm was evaluated and compared. Both have shown sufficient performance and sensitivity.
 \end{abstract}
 
 \begin{keyword}
@@ -77,13 +79,13 @@ A network anomaly is a deviation from the normal operation of the network, which
 
 Anomalies can last anywhere from one hour to multiple days (if unnoticed) and can be caused by a multitude of factors. Possibilities include: full connectivity disruption, in which all packets are lost; a device on the path is close to saturation, signified by an increase in one-way delay as packets spend more time in the buffers of the devices; a device on the path is saturated, where packets are lost as a device’s buffers overflow, signified by increase in one-way delay; routing changes leading to asymmetrical paths which takes more time to reorder packets, signified by large variance in one-way delays; or dirty fibers and other problems with optics, signified by an increase in packet loss rate.
 
-We collect our data from perfSONAR \cite{jedan} servers. PerfSONAR is a network measurement toolkit that monitors and stores network performance data between pairs of endpoints ("links"). While perfSONAR is installed on thousands of servers, we are especially interested in ones that are part of the WLCG (the worldwide Large Hadron Collider computing grid for the CERN LHC experiments) and the OSG (Open Science Grid) meshes. Data from all the servers is collected and transported to an Elasticsearch cluster at the University of Chicago. The cluster also collects and indexes data from the WLCG file transfer service (FTS), wide area network usage data from the WLCG job processing systems, network throughput measurements, etc.  Knowledge of available network capacity on all links makes it possible for the WLCG experiments to optimize performance of their distributed computing systems: data placement decisions, job brokering to computing centers that don't have the data to be processed but have a good connection to a center that does, etc. PerfSONAR data can also be used for capacity planning and network configuration decisions. Collected traceroute data makes it possible to do precise network tomography, thus attributing a saturation or other anomalous behaviour to one or several hops.   
+We used perfSONAR \cite{one} data collected by the Open Science Grid. PerfSONAR is a network measurement toolkit that monitors and stores network performance data between pairs of endpoints ("links"). While perfSONAR is installed on thousands of servers, we are particularly  interested in ones that are part of the WLCG (the worldwide Large Hadron Collider computing grid for the CERN LHC experiments) and the OSG (Open Science Grid) meshes. Data from all the servers is collected and transported to an Elasticsearch cluster at the University of Chicago. The cluster also collects and indexes data from the WLCG file transfer service (FTS), wide area network usage data from the WLCG job processing systems, network throughput measurements, etc.  Knowledge of available network capacity on all links makes it possible for the WLCG experiments to optimize performance of their distributed computing systems: data placement decisions, job brokering to computing centers that don't have the data to be processed but have a good connection to a center that does, etc. PerfSONAR data can also be used for capacity planning and network configuration decisions. Collected traceroute data makes it possible to do precise network tomography, thus attributing a saturation or other anomalous behaviour to one or several hops.   
 
 The WLCG/OSG network mesh size is extremely large. With an ever-increasing number of links and issues in network performance, it becomes increasingly difficult to identify where, when, and why these issues arise and whether or not they are significant enough to ignore. Furthermore, due to the high variance and quantity of data collected, it becomes difficult to analyze and develop models of normal network behavior and of anomalies. Machine learning algorithms are thus favorable as they can learn what is normal behavior and subsequently what is anomalous behavior, and adapt to changes in the structure of normal data.
 
 Ideally an optimal anomaly detection method would satisfy the following criteria: Have the capability to naturally combine disparate data features and data sources, e.g. all the links to/from a site, packet loss, OWDs, paths, throughput measurements, FTS measurements, etc.; give information on which features (or combinations of features) are causing the anomaly and alert the appropriate persons responsible for solving the issue; have tunable sensitivity, as we are not interested in short duration (order of 1 hour) flukes as no action could be taken at time scales shorter than that; and perform at a practical level.
 
-\subsection{Packet loss}
+\subsection{Packet Loss}
 
 We are particularly interested in packet loss due to its extraordinary influence on transfer throughput. As seen in Figure \ref{fig:PL}, even a 0.02\% change in packet loss can cause a $10^3$ magnitude change in transfer throughput.
 
@@ -94,9 +96,11 @@ We are particularly interested in packet loss due to its extraordinary influence
     \label{fig:PL}
 \end{figure}
 
-\subsection{Related work}
+\subsection{Related Work}
 
-A number of methods exist for anomaly detection in time series data from single or multiple performance indicators. The simplest methods use amplitude and/or duration of mean and variance as indicators of anomaly significance, or some variant of ARIMA methods. Slightly more powerful are principal component analysis, wavelet analysis, Kalman filter, covariance matrix analysis, and online change-point detection methods. These methods are not able to benefit from the fact that significant anomalies simultaneously affect multiple performance metrics, often across multiple network links. Machine learning techniques have been widely used in anomaly detection \cite{dva}. Su presented a density method of using the k-nearest neighbors algorithm (kNN) to detect denial-of-service attacks \cite{tri}. Sakurada et al. published a reconstruction method of using autoencoders to detect anomalies on both artificial data generated from Lorenz system and real data from a spacecraft’s telemetry data \cite{cetiri}. Rajasegarar et al. described a boundary method of using one-class support vector machines for anomaly detection in sensor networks \cite{pet}. A dynamically adaptive plateau-detection (APD) was used on perfSONAR data as described in \cite{dvanaest}. Recently, Catmore proposed a split-sample classification method and other ideas for anomaly detection \cite{sest}. This paper presents two new methods based on split-sample classification and reconstruction. 
+A number of methods exist for anomaly detection in time series data from single or multiple performance indicators. The simplest methods use amplitude and/or duration of mean and variance as indicators of anomaly significance, or some variant of ARIMA methods. Slightly more powerful are principal component analysis, wavelet analysis, Kalman filter, covariance matrix analysis, and online change-point detection methods. These methods are not able to benefit from the fact that significant anomalies simultaneously affect multiple performance metrics, often across multiple network links. Machine learning techniques have been widely used in anomaly detection \cite{two}. Su presented a density method of using the k-nearest neighbors algorithm (kNN) to detect denial-of-service attacks \cite{three}. Sakurada et al. published a reconstruction method of using autoencoders to detect anomalies on both artificial data generated from Lorenz system and real data from a spacecraft’s telemetry data \cite{four}. Rajasegarar et al. described a boundary method of using one-class support vector machines for anomaly detection in sensor networks \cite{five}. A dynamically adaptive plateau-detection (APD) was used on perfSONAR data as described in \cite{seven}. Recently, Catmore proposed a split-sample classification method and other ideas for anomaly detection \cite{six}. This paper presents two new methods based on split-sample classification and reconstruction. 
+
+In the case of anomaly detection of active network monitoring data, Calyam et al. presented a dynamically adaptive plateau-detection (APD) method based on reinforcement learning \cite{eight} \cite{nine}. Zhang et al. proposed a PCA-based approach for correlated anomaly detection \cite{ten}. One of the major differences between our approach in this paper and the methods in \cite{eight} \cite{nine} \cite{ten} is that we use supervised boosted decision trees (BDT) and feedforward neural network machine learning algorithms whereas the authors in \cite{eight} \cite{nine} \cite{ten} used reinforcement learning and unsupervised PCA. Another major difference is that our method utilizes data samples in consecutive time intervals for anomaly detection model training and prediction while the methods in \cite{eight} \cite{nine} rely upon the mean and standard deviation of the samples in a defined buffer to detect anomalies.
 
 \section{Datasets}
 
@@ -160,34 +164,36 @@ The data collected between various links measuring their one-way delay, throughp
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{real_data_one_link.png}
-    \caption{This graph shows packet loss measured over a 20 day period between 2017-05-10 and 2017-05-30 for one link where the source is PIC and the destination is CERN. CERN is a Tier-0 site in Geneva, Switzerland, PIC is a Spanish Tier-1 center.}
+    \caption{This graph shows packet loss measured over a 20 day period between 2017-05-10 and 2017-05-30 for one link where the source is PIC and the destination is CERN. CERN is a Tier-0 site in Geneva, Switzerland, PIC is the Spanish Tier-1 center.}
     \label{fig:real_one}
 \end{figure}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{real_data_5_links.png}
-    \caption{This graph shows the square root of packet loss (\%)  over a six-day period between 05-14-2017 and 05-20-2017 for 5 sites: CERN-PROD, FZK-LCG2, UFlorida-HPC, UKI-NORTHGRID-MAN-HEP, CSCS-LCG2.}
+    \caption{This graph shows the square root of packet loss (\%)  over a six-day period between 05-14-2017 and 05-20-2017 for 5 WLCG sites: CERN-PROD, FZK-LCG2, UFlorida-HPC, UKI-NORTHGRID-MAN-HEP, CSCS-LCG2.}
     \label{fig:real_five}
 \end{figure}
 
 \section{New Anomaly Detection Method}
 
-There are numerous algorithms for anomaly detection in time series. Among more general methods used are eg. ARIMA, SVM, and more specific ones eg. Bayesian inspired approaches \cite{sedam}. We tested one-class support vector machine method, while it showed both high specificity and sensitivity on a small set of timeseries, when employed on a large space (data from more links or additional features), it suffered from the curse of dimensionality. Simultaneous change point detection method from \cite{sedam} showed unacceptable computational cost at our data scale. We have no annotated historical data so that limits us to unsupervised methods. The amount of data that has to be continuously processed excludes several otherwise promising approaches. Similar to the split-sample classification method \cite{sest}, in the following we compare time-dependent features in the period under examination (subject period) and in the directly preceding period (referent period). We do this by trying to train a Boosted Decision Tree (BDT)\cite{osam} or a Neural Network (NN) to correctly assign unlabeled samples to subject or referent periods.  We expect that any significant difference in data between the two periods will be exploited by the BDT/NN. It follows that the accuracy of the classification will be proportional to the dissimilarity of the samples. We selected the referent periods of 24 hours as significantly long to not be sensitive to short duration incidents but short enough to capture long-term changes in link performance. Subject period of one hour is roughly the minimal period that one could expect a human intervention to happen in case alert was received. For both approaches, we flag the reference data with zero and the subject data with one.  Further, 70\% of the data from both the reference and subject periods are combined and used to train the machine learning models. Training effectiveness was then tested on the remaining 30\% of the data.
+There are numerous algorithms for anomaly detection in time series. Among more general methods used are eg. ARIMA, SVM, and more specific ones e.g. Bayesian inspired approaches \cite{sedam}. We tested one-class support vector machine method, while it showed both high specificity and sensitivity on a small set of time series, when employed on a large space (data from more links or additional features), it suffered from the curse of dimensionality. Simultaneous change point detection method from \cite{sedam} showed unacceptable computational cost at our data scale.
+Since we have no annotated historical data we are limited to unsupervised methods. The amount of data that must be continuously processed excludes several otherwise promising approaches. 
+Similar to the split-sample classification method \cite{six}, in the following we compare time-dependent features in the period under examination (subject period) and in the directly preceding period (referent period). We do this by trying to train a Boosted Decision Tree (BDT)\cite{eleven} or a Neural Network (NN) to correctly assign unlabeled samples to subject or referent periods.  We expect that any significant difference in data between the two periods will be exploited by the BDT/NN. It follows that the accuracy of the classification will be proportional to the dissimilarity of the samples. We selected the referent periods of 24 hours as significantly long to not be sensitive to short duration incidents but short enough to capture long-term changes in link performance. Subject period of one hour is roughly the minimal period that one could expect a human intervention to happen in case alert was received. For both approaches, we flag the reference data with zero and the subject data with one.  Further, 70\% of the data from both the reference and subject periods are combined and used to train the machine learning models. Training effectiveness was then tested on the remaining 30\% of the data.
 
 \subsection{Boosted Decision Trees}
 
-A decision tree is a rule-based learning method \cite{dva} that creates a classification model, which predicts the value of a target variable by learning simple decision rules inferred from the data features. A decision tree of depth 1 is known as a decision stump.
+A decision tree is a rule-based learning method \cite{two} that creates a classification model, which predicts the value of a target variable by learning simple decision rules inferred from the data features. A decision tree of depth 1 is known as a decision stump.
 
 Decision trees make a split based on the Gini impurity, a measure of how often a randomly chosen element from the data set would be incorrectly labeled if it were labeled randomly. A higher Gini impurity suggests a less pure split.
 
-For a set of items with $A$ classes, where $i \in \{ 1, 2, \cdots , A \} $. Let $p_i$ be the fraction of items labeled as class $i$ in the set. The Gini impurity can be calculated as follows \cite{devet}:
+For a set of items with $A$ classes, where $i \in \{ 1, 2, \cdots , A \} $. Let $p_i$ be the fraction of items labeled as class $i$ in the set. The Gini impurity can be calculated as follows \cite{twelve}:
 
 \begin{equation} I_g(p)=1-\sum_{i=1}^{A}p_i^2 
 \end{equation}
 
 As examples of decision trees and stumps, Figures \ref{fig:tree} and \ref{fig:stumps} show decision trees of different depths.	
-We apply AdaBoost \cite{deset}, a boosted decision tree algorithm, to our datasets. Boosting is a family of machine learning algorithms that start from weak classifiers, i.e. classifiers that label examples slightly better than random guessing, and return a weighted vote of all of them, the result of which is much more accurate at labeling.
+We apply AdaBoost \cite{fourteen}, a boosted decision tree algorithm, to our datasets. Boosting is a family of machine learning algorithms that start from weak classifiers, i.e. classifiers that label examples slightly better than random guessing, and return a weighted vote of all of them, the result of which is much more accurate at labeling.
 
 \begin{figure}[htbp]
     \centering
@@ -207,10 +213,10 @@ Boosted decision trees train a decision tree by dividing data on one of the feat
 
 The trees' classification performance is used to determine its true positive rate (i.e. the number of positive events that were correctly identified as such) and false positive rate (i.e. the number of negative events wrongly categorized as positive). These rates are then used to determine an Area Under Curve (AUC) score. The AUC score is the area under the Receiver Operating Characteristic (ROC) Curve, which plots the true positive rate against the false positive rate, and is a popular metric for binary classification.
 
-\subsection{Simple feedforward neural network}
+\subsection{Simple Feedforward Neural Network}
 
 With recent advances in both hardware performance and availability (GPUs), and software stack (Keras, Tensorflow), it became possible to relatively quickly train neural networks with a large number of trainable parameters. We chose to start with a neural network consisting of one input layer with as many ReLU activation neurons as the number of time series data under investigation, one hidden layer with twice as many ReLU neurons and one sigmoid activated output neuron. We selected this topology as a surely sufficient to capture any effects in training data. In a future work, we will investigate the performance of a simpler, one layer network as this would simplify finding which time series contributed most to a period being flagged as anomalous. In order to increase performance, will also optimize learning rates, try different neuron activations, optimizers,  etc.  
-Training and testing data were prepared in the same way as for the BDT model, except that training data gets shuffled after each epoch. We train for 60 epochs in batches of 256 samples using Adam optimizer \cite{jedanaest} and as a loss function use binary cross-entropy. Training for one period takes around 20 seconds on a Tesla 20K NVidia GPU and roughly three times less on NVidia GTX 1080Ti. How well the trained network performed on the test samples is given by the binary accuracy. An anomaly is flagged based on how likely an accuracy of that magnitude is to happen by pure chance.
+Training and testing data were prepared in the same way as for the BDT model, except that training data gets shuffled after each epoch. We train for 60 epochs in batches of 256 samples using Adam optimizer \cite{fifteen} and as a loss function use binary cross-entropy. Training for one period takes around 20 seconds on a Tesla 20K NVidia GPU and roughly three times less on NVidia GTX 1080Ti. How well the trained network performed on the test samples is given by the binary accuracy. An anomaly is flagged based on how likely an accuracy of that magnitude is to happen by pure chance.
 
 \section{Experimental Results}
 
@@ -240,17 +246,22 @@ Though the two results were very comparable, the decision stumps took on average
 
 \subsubsection{Anomaly Duration vs. Degree of Anomalous Behavior}
 
-We wanted to know which had a greater effect on whether an interval was determined to be anomalous: the magnitude of the offset between an anomaly from normal data, the duration of anomalous behavior, or the number of time series affected. We used the simulated data described in Section 2.1. Six anomalies were generated on the same set of normal data. Figure \ref{fig:withauc} shows a visual representation of said generated anomalies. The start of each anomaly was separated by 24 hours. We fluctuated the duration of anomalous behavior, the number of features affected, and the anomaly offset for each one. The degree of anomalous behavior encompasses both the number of features affected and the anomaly offset.
+We wanted to know which factors had the greatest effect on whether an interval was determined to be anomalous: the magnitude of the offset between an anomaly from normal data, the duration of anomalous behavior, or the number of time series affected. 
+We used the simulated data described in Section 2.1. 
+Six anomalies were generated on the same set of normal data. Figure \ref{fig:withauc} shows a visual representation of generated anomalies. 
+The start of each anomaly was separated by 24 hours. We fluctuated the duration of anomalous behavior, the number of features affected, and the anomaly offset for each one. The degree of anomalous behavior encompasses both the number of features affected and the anomaly offset.
 
 Data considered to have affected many features affected three times as many as data that was not (3 features vs 1). Data with a long duration of anomalous behavior was three times longer than data (3 hours vs 1). We generated offsets (anomalies) of two amplitudes: small - $2\sigma$ and large - $5\sigma$ shift. 
 
-Normal data had an AUC score and accuracy of roughly 0.50 and 0.96 respectively. The threshold for anomalous behavior was determined as any AUC score above 0.55. From the results shown in Table \ref{table:bdtonfixed} and Figure \ref{fig:withauc}, we see that the change in the anomaly offset had the most significant effect on whether an anomaly was determined to be so.
+Normal data had an AUC score and accuracy of roughly 0.50 and 0.96 respectively. 
+The threshold for anomalous behavior was defined as any AUC score above 0.55. 
+From the results shown in Table \ref{table:bdtonfixed} and Figure \ref{fig:withauc}, we see that the change in the anomaly offset had the most significant effect on whether an anomaly was determined to be so.
 
 Holding the number of features affected and the duration of anomalous behavior constant, an increase in anomaly offset increased the AUC score by 0.379, a roughly 63.91\% increase, and increased the accuracy by 0.032. The number of features affected had a less significant effect. Holding the anomaly offset and anomaly duration constant, an increase in the number of features affected increased the AUC score by 0.267, a roughly 45.03\% increase. The duration of anomalous behavior had the smallest effect on determining an anomaly. Holding the other two variables constant, an increase in the duration of anomalous behavior decreased the AUC score by 0.068, a roughly 11.47\% change. The results suggest that the extent to which an anomaly is considered as such is more dependent on the anomaly offset and the features affected, that is, the degree of anomalous behavior, more than the anomaly duration.
 
 \begin{table}[htbp]
 \centering
-\caption{This table shows the AUC scores of six different simulated anomalies all having some combination of anomaly duration, amplitude, and a number of features affected. Anomaly numbers come in the order of when the anomaly was generated. Results above our 0.55 cut level are shown in bold letters.}
+\caption{The AUC scores of six different simulated anomalies all having some combination of anomaly duration, amplitude, and a number of features affected. Anomaly numbers come in the order of when the anomaly was generated. Results above our 0.55 cut level are shown in bold letters.}
 \label{table:bdtonfixed}
 \resizebox{\linewidth}{!} {% 
 \begin{tabular}{@{}cccccccc@{}}
@@ -264,7 +275,7 @@ Holding the number of features affected and the duration of anomalous behavior c
 5                                 & 5                                               & 1                                           & 3                                         & 0.500 $\vert$ 0.960                & \textbf{0.693 $\vert$ 0.960}  & \textbf{0.702 $\vert$ 0.959}  & 0.502 $\vert$ 0.959           \\
 6                                 & 5                                               & 3                                           & 1                                         & 0.500 $\vert$ 0.960                & \textbf{0.999 $\vert$ 0.999}  &                 &                 \\ 
 \bottomrule
-\end{tabular}%
+\end{tabular}
 }
 \end{table}
 
@@ -275,9 +286,9 @@ Holding the number of features affected and the duration of anomalous behavior c
     \label{fig:withauc}
 \end{figure*}
 
-\subsubsection{Application on real data}
+\subsubsection{Application on Real Data}
 
-We tested the effectiveness of using a boosted decision tree onto both the packet loss and one-way delay data over a 4-day time span between two sites: PIC and CERN-PROD. The AUC threshold was set to 0.55. From Figure \ref{fig:BDTlow}, it is evident that the AUC threshold is too high, as it detects anomalies far too often to be practical.
+We tested the effectiveness of using a boosted decision tree on both the packet loss and one-way delay data over a 4-day time span between two sites: PIC and CERN-PROD. The AUC threshold was set to 0.55. From Figure \ref{fig:BDTlow}, it is evident that the AUC threshold is too high, as it detects anomalies far too often to be practical.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=1.0\linewidth]{BDT_lowcut.png}
@@ -302,7 +313,7 @@ Due to the high frequency at which anomalies were detected, the AUC threshold of
 \end{figure}
 
 
-\subsection{Simple feedforward neural network}
+\subsection{Simple Feedforward Neural Network}
 
 In this preliminary study, we used two hidden layers with twice as many ReLU neurons as time series and a single sigmoid output neuron. This results in a network with 2521 trainable parameters.
 The result of the test is a binary classification accuracy - defined as a ratio of correctly labeled and total number of samples. The distribution of accuracies that can be expected by chance depends only on the number of samples in referent and subject intervals and can be seen in Figure \ref{fig:Chance}.
@@ -311,16 +322,17 @@ The result of the test is a binary classification accuracy - defined as a ratio 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{binomial_chance_accuracy.eps}
-    \caption{This figure shows the distribution of accuracies obtained by chance (binomial distribution) corresponding to 12h referent and 1h subject intervals with one sample per second (p=0.92308). Accuracy larger than 0.9285 can happen with $<1\%$ chance. }
+    \caption{Distribution of accuracies obtained by chance (binomial distribution) corresponding to 12 hour referent and 1 hour subject intervals with one sample per second (p=0.92308). Accuracy larger than 0.9285 can happen with $<1\%$ chance. }
     \label{fig:Chance}
 \end{figure}
 
-\subsubsection{Applied to simulated data, impact of duration, magnitude of anomaly, and number of affected time series}
-We used the simulated data described in Section 2.1. A 12h period prior to the 1h subject period was used as a reference. This choice gives an accuracy of 0.923 by pure chance, and we consider anomaly detected if the calculated accuracy has less than 1\% chance of appearing randomly (0.9285). From results shown in Table \ref{table:nntonfixed} and Figure \ref{fig:nnonfixed}, we see that only the last three anomalies (with offsets of 5$\sigma$ have been detected, and only in the first hour of anomaly appearance. Accuracy levels during the first three anomalies and during the last two hours of the fourth anomaly were not simply under the threshold but actually exactly equal to pure chance accuracy. As it can be seen from Figure \ref{fig:loss}, loss and accuracy change in a stepwise manner and in case backpropagation optimization does not find any minima result will be equal to chance. This does not limit the applicability of the method as we are anyhow not interested in small effect anomalies affecting single time series, or repeated identification of the same anomaly. 
+%\subsubsection{Applied to simulated data, impact of duration, magnitude of anomaly, and number of affected time series}
+
+We used the simulated data described in Section 2.1. A 12 hour  period prior to the 1 hour subject period was used as a reference. This choice gives an accuracy of 0.923 by pure chance, and we consider anomaly detected if the calculated accuracy has less than 1\% chance of appearing randomly (0.9285). From results shown in Table \ref{table:nntonfixed} and Figure \ref{fig:nnonfixed}, we see that only the last three anomalies (with offsets of 5$\sigma$) have been detected, and only in the first hour of anomaly appearance. Accuracy levels during the first three anomalies and during the last two hours of the fourth anomaly were not simply under the threshold but actually exactly equal to pure chance accuracy. As it can be seen from Figure \ref{fig:loss}, loss and accuracy change in a stepwise manner and in case backpropagation optimization does not find any minima result will be equal to chance. This does not limit the applicability of the method as we are anyhow not interested in small effect anomalies affecting single time series, or repeated identification of the same anomaly. 
 
 \begin{table}[htbp]
 \centering
-\caption{This table shows the accuracies of six different simulated anomalies all having some combination of anomaly duration, amplitude, and a number of features affected. Anomaly numbers come in the order of time the anomaly was generated. Results above our 0.928 cut level are shown in bold letters.}
+\caption{Accuracy for six different simulated anomalies, each having some combination of anomaly duration, amplitude, and a number of features affected. Anomaly numbers come in the order of time the anomaly was generated. Results above our 0.928 cut level are shown in bold letters.}
 \label{table:nntonfixed}
 \resizebox{\linewidth}{!} {% 
 \begin{tabular}{@{}cccccccc@{}}
@@ -353,7 +365,7 @@ We used the simulated data described in Section 2.1. A 12h period prior to the 1
 \end{figure}
 
 
-\subsubsection{Performance on actual data}
+\subsubsection{Performance on Actual Data}
 
 When using this method on actual data we use referent interval of 24 hours to average possible anomalies in referent data over longer periods. Data is measured packet loss between CERN and 20 other sites (from 73 that we have values measured for) covering a four day period. There is one data point per minute. Missing data was filled with zero values. Figure \ref{fig:nn_all}. shows results obtained by training the network for 100 epochs for each interval, using a batch size of 10 and having 70:30 split between training and testing data. Mean of the chance accuracy distribution is at 0.96 and chance accuracy of more than 0.97 has less than 1\% probability. 
 
@@ -367,11 +379,11 @@ When using this method on actual data we use referent interval of 24 hours to av
 
 \section{Conclusion}
 
-This paper presents two new methods of detecting network performance anomaly based on split-sample classification: AdaBoost and Simple feedforward neural network. Both methods are first tested on simulated datasets to check their sensitivity with respect to duration and amplitude of anomaly. The boosted decision tree method proved to be very fast (4 seconds evaluation per one hour of data tested) and detected all the simulated anomalies. An added benefit is that it directly returns ordered list of series according to their contribution to the anomaly being flagged. With appropriately selected AUC threshold it is possible to tune desired sensitivity/false positive level. 
-The simple neural network model used was not hyper-parameter optimized and the one network tried proved less sensitive to short and low amplitude changes. Given that we are looking for the most significant anomalies this is a good feature. While the evaluation is slower at 20 seconds per hour of data tested, it is still fast enough to be of practical use. A more significant issue is that it requires a GPU for processing. Since this is a three-layer network it is difficult to get information on the importance of different time series to the resulting decision. While results on the actual data are encouraging, before using it in a production environment, different network configurations should be tested (two layers, fewer neurons per layer, etc.) and hyper-parameter tuned.  
+We presented two new methods of detecting network performance anomaly based on split-sample classification: AdaBoost and simple feedforward neural network. Both methods were first tested on simulated datasets to check their sensitivity with respect to duration and amplitude of anomaly. The boosted decision tree method proved to be very fast (4 seconds evaluation per one hour of sampled data tested) and detected all the simulated anomalies. An added benefit of this method is that it directly returns an ordered list of series according to their contribution to the anomaly being flagged. With an appropriately selected AUC threshold it is possible to tune the desired sensitivity/false positive level. 
+The simple neural network model used was not hyper-parameter optimized and the one network tried proved less sensitive to short and low amplitude changes. Given that we are looking for the most significant anomalies this is a good feature. While the evaluation is slower at 20 seconds per hour of data tested, it is still fast enough to be of practical use. A more significant issue is that it requires a GPU for processing. Since this is a three-layer network it is difficult to get information on the importance of different time series to the resulting decision. While results on the actual data are encouraging, before using it in a production environment different network configurations should be tested (two layers, fewer neurons per layer, etc.) and hyper-parameter tuned.  
 
 \section{Future work}
-Once the Simple Neural Network model is fully optimized, a set of data should be independently annotated by several people. The annotations should be compared and a self consistent set produced. Both methods described should be evaluated against it. A new set of tests should be done this time training models on multiple features per link (eg. OWD and Packetloss). The NN model that not only detects anomaly but also classifies it into one of the few classes (eg. overloaded link, unstable path, etc.). Finally, brand new methods should be tested: Data smashing\cite{devet}, LSTM Deep Neural networks, etc.   
+Once the simple neural network model is fully optimized, a set of data should be independently annotated by several people. The annotations should be compared and a self consistent set produced. Both methods described should be evaluated against it.  A new set of tests should be done this time training models on multiple features per link (eg. OWD and Packetloss). The NN model that not only detects anomaly but also classifies it into one of the few classes (eg. overloaded link, unstable path, etc.). Finally, brand new methods should be tested: Data smashing\cite{twelve}, LSTM Deep Neural networks, etc.   
 
 \section{Acknowledgements}
 
